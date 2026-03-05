@@ -8,12 +8,11 @@
     <style>
         :root { 
             --neon-accent: #00ff95; 
-            --bg-main: #1a1d23; /* Grigio antracite più chiaro */
-            --bg-sidebar: #252932; /* Sidebar distinta */
+            --bg-main: #1a1d23; 
+            --bg-sidebar: #252932; 
             --panel-bg: #2d323c; 
             --text-primary: #ffffff;
             --text-secondary: #a0aec0;
-            --border-color: rgba(0, 255, 149, 0.3);
         }
         
         * { box-sizing: border-box; }
@@ -22,11 +21,12 @@
             font-family: 'Inter', sans-serif; display: flex; height: 100vh; overflow: hidden;
         }
 
-        /* Sidebar Professionale Chiara */
+        /* Sidebar Professionale (Scompare su Mobile) */
         .sidebar { 
             width: 280px; background: var(--bg-sidebar); border-right: 1px solid rgba(255,255,255,0.05);
             display: flex; flex-direction: column; padding: 30px; z-index: 10;
             box-shadow: 10px 0 30px rgba(0,0,0,0.2);
+            transition: transform 0.3s ease;
         }
         .brand { 
             font-family: 'Orbitron', sans-serif; font-size: 1.4rem; color: var(--neon-accent); 
@@ -38,6 +38,7 @@
             text-decoration: none; color: var(--text-secondary); font-size: 0.95rem; 
             padding: 12px 15px; border-radius: 8px; transition: all 0.2s ease;
             background: rgba(255,255,255,0.02);
+            display: block; width: 100%;
         }
         .nav-item:hover { 
             background: var(--panel-bg); color: var(--neon-accent);
@@ -75,7 +76,7 @@
         button[type="submit"]:hover { filter: brightness(1.1); transform: translateY(-2px); box-shadow: 0 5px 15px rgba(0,255,149,0.3); }
 
         /* Griglia Card */
-        .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px; }
+        .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px; }
         .card { 
             background: var(--panel-bg); border-radius: 12px; padding: 25px; 
             text-decoration: none; color: var(--text-primary); transition: 0.3s;
@@ -88,30 +89,69 @@
         .card h3 { color: var(--neon-accent); margin: 0 0 10px 0; font-family: 'Orbitron', sans-serif; font-size: 1rem; }
         .card p { margin: 0; color: var(--text-secondary); font-size: 0.85rem; line-height: 1.5; }
 
-        .footer { margin-top: auto; font-size: 0.75rem; color: var(--text-secondary); opacity: 0.6; }
+        .footer { margin-top: auto; font-size: 0.75rem; color: var(--text-secondary); opacity: 0.6; text-align: center;}
+
+        /* --- MOBILE RESPONSIVE QUERIES --- */
+        @media (max-width: 768px) {
+            body { flex-direction: column; overflow-y: auto; height: auto;}
+            
+            .sidebar { 
+                width: 100%; border-right: none; border-bottom: 1px solid rgba(255,255,255,0.05);
+                padding: 15px; flex-direction: row; justify-content: space-around; 
+                position: sticky; top: 0; height: auto;
+                box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+            }
+            .brand { margin-bottom: 0; font-size: 1.2rem;}
+            .nav-links { flex-direction: row; gap: 5px; flex-grow: 0; display: none; } /* Nascondiamo i link standard */
+            .footer { display: none;}
+            
+            .main { padding: 20px; gap: 20px;}
+            .panel { padding: 20px;}
+            h2 { font-size: 1.2rem; margin-bottom: 15px;}
+            .search-form { flex-direction: column; gap: 8px;}
+            button[type="submit"] { padding: 15px; width: 100%;}
+            
+            .grid { grid-template-columns: 1fr;} /* Una sola colonna su mobile */
+        }
+        
+        /* Menu Mobile Dedicato a fondo pagina */
+        .mobile-nav { 
+            display: none; position: fixed; bottom: 0; left: 0; width: 100%; 
+            background: var(--bg-sidebar); border-top: 2px solid var(--border-color);
+            justify-content: space-around; padding: 10px; z-index: 100;
+        }
+        .mobile-item { 
+            text-decoration: none; color: var(--text-secondary); font-size: 0.8rem;
+            text-align: center; padding: 5px;
+        }
+        .mobile-item:hover { color: var(--neon-accent);}
+        
+        @media (max-width: 768px) {
+            .mobile-nav { display: flex;}
+            .main { padding-bottom: 80px;} /* Spazio per la nav mobile */
+        }
     </style>
 </head>
 <body>
     <div class="sidebar">
         <div class="brand">KEYGAP</div>
-        <nav class="nav-links">
-            <a href="https://www.amazon.it/gp/bestsellers/?tag=keygap-21" target="_blank" class="nav-item">Top Venduti</a>
-            <a href="https://www.amazon.it/gp/new-releases/?tag=keygap-21" target="_blank" class="nav-item">Nuove Uscite</a>
-            <a href="https://www.amazon.it/gp/movers-and-shakers/?tag=keygap-21" target="_blank" class="nav-item">Tendenze</a>
-            <a href="https://www.amazon.it/gp/goldbox?tag=keygap-21" target="_blank" class="nav-item">Offerte Lampo</a>
-            <a href="https://www.amazon.it/warehouse?tag=keygap-21" target="_blank" class="nav-item">Amazon Warehouse</a>
-        </nav>
         <div class="footer">
             SYSTEM STATUS: ONLINE<br>
             <span id="clock">00:00:00</span>
         </div>
+    </div>
+    
+    <div class="mobile-nav">
+        <a href="https://www.amazon.it/gp/bestsellers/?tag=keygap-21" target="_blank" class="mobile-item">BestSellers</a>
+        <a href="https://www.amazon.it/gp/new-releases/?tag=keygap-21" target="_blank" class="mobile-item">New</a>
+        <a href="https://www.amazon.it/gp/goldbox?tag=keygap-21" target="_blank" class="mobile-item">Lampo</a>
     </div>
 
     <div class="main">
         <div class="panel">
             <h2>Market Scanner</h2>
             <form action="https://www.amazon.it/s" method="GET" class="search-form" target="_blank">
-                <input type="text" name="k" placeholder="Cerca un prodotto su Amazon..." required autocomplete="off">
+                <input type="text" name="k" placeholder="Cerca prodotto..." required autocomplete="off">
                 <input type="hidden" name="tag" value="keygap-21">
                 <button type="submit">Cerca</button>
             </form>
