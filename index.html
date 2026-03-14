@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Keygap Control Center - Pro</title>
+    <title>K-Sovereign Node | Market Intelligence</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;700&family=Orbitron:wght@700&display=swap" rel="stylesheet">
     <style>
         :root { 
@@ -18,171 +18,195 @@
         * { box-sizing: border-box; }
         body { 
             margin: 0; background: var(--bg-main); color: var(--text-primary); 
-            font-family: 'Inter', sans-serif; display: flex; height: 100vh; overflow: hidden;
+            font-family: 'Inter', sans-serif; display: flex; flex-direction: column; height: 100vh; overflow: hidden;
         }
 
-        /* Sidebar Professionale (Scompare su Mobile) */
+        /* --- NUOVA STATUS BAR --- */
+        .node-status-bar {
+            background: rgba(0, 255, 149, 0.05);
+            border-bottom: 1px solid var(--neon-accent);
+            padding: 10px;
+            text-align: center;
+            font-family: 'Orbitron', sans-serif;
+            font-size: 0.75rem;
+            letter-spacing: 1px;
+        }
+
+        .pulse-dot {
+            display: inline-block;
+            width: 8px;
+            height: 8px;
+            background: var(--neon-accent);
+            border-radius: 50%;
+            margin-right: 8px;
+            box-shadow: 0 0 10px var(--neon-accent);
+            animation: pulse-animation 1.5s infinite;
+        }
+
+        @keyframes pulse-animation {
+            0% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(0, 255, 149, 0.7); }
+            70% { transform: scale(1); box-shadow: 0 0 0 10px rgba(0, 255, 149, 0); }
+            100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(0, 255, 149, 0); }
+        }
+
+        .app-container { display: flex; flex: 1; overflow: hidden; }
+
         .sidebar { 
             width: 280px; background: var(--bg-sidebar); border-right: 1px solid rgba(255,255,255,0.05);
             display: flex; flex-direction: column; padding: 30px; z-index: 10;
-            box-shadow: 10px 0 30px rgba(0,0,0,0.2);
-            transition: transform 0.3s ease;
-        }
-        .brand { 
-            font-family: 'Orbitron', sans-serif; font-size: 1.4rem; color: var(--neon-accent); 
-            letter-spacing: 2px; margin-bottom: 40px; text-align: center;
         }
 
-        .nav-links { display: flex; flex-direction: column; gap: 8px; flex-grow: 1; }
-        .nav-item { 
-            text-decoration: none; color: var(--text-secondary); font-size: 0.95rem; 
-            padding: 12px 15px; border-radius: 8px; transition: all 0.2s ease;
-            background: rgba(255,255,255,0.02);
-            display: block; width: 100%;
-        }
-        .nav-item:hover { 
-            background: var(--panel-bg); color: var(--neon-accent);
-            transform: translateX(5px);
+        .logo { 
+            font-family: 'Orbitron', sans-serif; color: var(--neon-accent); 
+            font-size: 1.5rem; margin-bottom: 40px; text-shadow: 0 0 15px rgba(0,255,149,0.3);
         }
 
-        /* Area Principale */
-        .main { 
-            flex-grow: 1; padding: 40px; display: flex; flex-direction: column; gap: 30px; 
-            overflow-y: auto; background: radial-gradient(circle at top right, #242933, #1a1d23);
-        }
-        
-        .panel { 
-            background: var(--panel-bg); border-radius: 12px; padding: 35px;
-            box-shadow: 0 15px 35px rgba(0,0,0,0.3), inset 0 1px 1px rgba(255,255,255,0.1);
-            border: 1px solid rgba(255,255,255,0.05);
-        }
+        .main { flex: 1; padding: 40px; overflow-y: auto; background: var(--bg-main); }
 
-        h2 { font-family: 'Orbitron', sans-serif; font-size: 1.5rem; margin-top: 0; margin-bottom: 25px; }
-
-        /* Barra di Ricerca Moderna */
-        .search-form { display: flex; gap: 12px; }
+        /* --- RICERCA --- */
+        .search-form { display: flex; gap: 10px; margin-bottom: 30px; }
         input[type="text"] { 
-            flex-grow: 1; background: #1a1d23; border: 2px solid #3f444e; 
-            color: #fff; padding: 16px 20px; border-radius: 8px; font-size: 1rem;
-            transition: border-color 0.3s;
+            flex: 1; background: var(--bg-sidebar); border: 1px solid rgba(255,255,255,0.1); 
+            padding: 15px; border-radius: 8px; color: white; outline: none; transition: 0.3s;
         }
-        input[type="text"]:focus { border-color: var(--neon-accent); outline: none; }
+        input[type="text"]:focus { border-color: var(--neon-accent); box-shadow: 0 0 10px rgba(0,255,149,0.1); }
         
-        button[type="submit"] { 
-            background: var(--neon-accent); color: #0b0e11; border: none; 
-            padding: 0 30px; border-radius: 8px; font-weight: 700; cursor: pointer;
-            transition: all 0.3s; text-transform: uppercase;
+        .btn-search { 
+            background: var(--neon-accent); border: none; padding: 15px 30px; 
+            border-radius: 8px; font-weight: bold; cursor: pointer; transition: 0.3s;
         }
-        button[type="submit"]:hover { filter: brightness(1.1); transform: translateY(-2px); box-shadow: 0 5px 15px rgba(0,255,149,0.3); }
 
-        /* Griglia Card */
-        .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px; }
-        .card { 
-            background: var(--panel-bg); border-radius: 12px; padding: 25px; 
-            text-decoration: none; color: var(--text-primary); transition: 0.3s;
-            border: 1px solid rgba(255,255,255,0.05);
+        /* --- CARD INTERCETTAZIONE PRIORITARIA --- */
+        .priority-panel {
+            border: 2px solid var(--neon-accent);
+            background: linear-gradient(45deg, #2d323c, #1a1d23);
+            padding: 25px;
+            border-radius: 12px;
+            margin-bottom: 30px;
+            position: relative;
+            overflow: hidden;
         }
-        .card:hover { 
-            border-color: var(--neon-accent); background: #353b47;
-            transform: translateY(-5px);
+
+        .priority-panel::after {
+            content: "TOP SECRET";
+            position: absolute;
+            top: 10px;
+            right: -30px;
+            background: #ff4444;
+            color: white;
+            padding: 5px 40px;
+            transform: rotate(35deg);
+            font-size: 0.7rem;
+            font-weight: bold;
         }
-        .card h3 { color: var(--neon-accent); margin: 0 0 10px 0; font-family: 'Orbitron', sans-serif; font-size: 1rem; }
-        .card p { margin: 0; color: var(--text-secondary); font-size: 0.85rem; line-height: 1.5; }
 
-        .footer { margin-top: auto; font-size: 0.75rem; color: var(--text-secondary); opacity: 0.6; text-align: center;}
+        .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 20px; }
+        .panel { background: var(--panel-bg); padding: 25px; border-radius: 12px; transition: 0.3s; border: 1px solid rgba(255,255,255,0.03); }
+        .panel:hover { transform: translateY(-5px); border-color: var(--neon-accent); }
 
-        /* --- MOBILE RESPONSIVE QUERIES --- */
+        .filter-link { 
+            display: inline-block; margin-top: 15px; color: var(--neon-accent); 
+            text-decoration: none; font-weight: bold; font-size: 0.9rem; text-transform: uppercase;
+        }
+
+        /* Mobile Fix */
         @media (max-width: 768px) {
-            body { flex-direction: column; overflow-y: auto; height: auto;}
-            
-            .sidebar { 
-                width: 100%; border-right: none; border-bottom: 1px solid rgba(255,255,255,0.05);
-                padding: 15px; flex-direction: row; justify-content: space-around; 
-                position: sticky; top: 0; height: auto;
-                box-shadow: 0 5px 15px rgba(0,0,0,0.2);
-            }
-            .brand { margin-bottom: 0; font-size: 1.2rem;}
-            .nav-links { flex-direction: row; gap: 5px; flex-grow: 0; display: none; } /* Nascondiamo i link standard */
-            .footer { display: none;}
-            
-            .main { padding: 20px; gap: 20px;}
-            .panel { padding: 20px;}
-            h2 { font-size: 1.2rem; margin-bottom: 15px;}
-            .search-form { flex-direction: column; gap: 8px;}
-            button[type="submit"] { padding: 15px; width: 100%;}
-            
-            .grid { grid-template-columns: 1fr;} /* Una sola colonna su mobile */
-        }
-        
-        /* Menu Mobile Dedicato a fondo pagina */
-        .mobile-nav { 
-            display: none; position: fixed; bottom: 0; left: 0; width: 100%; 
-            background: var(--bg-sidebar); border-top: 2px solid var(--border-color);
-            justify-content: space-around; padding: 10px; z-index: 100;
-        }
-        .mobile-item { 
-            text-decoration: none; color: var(--text-secondary); font-size: 0.8rem;
-            text-align: center; padding: 5px;
-        }
-        .mobile-item:hover { color: var(--neon-accent);}
-        
-        @media (max-width: 768px) {
-            .mobile-nav { display: flex;}
-            .main { padding-bottom: 80px;} /* Spazio per la nav mobile */
+            .app-container { flex-direction: column; }
+            .sidebar { width: 100%; height: auto; padding: 20px; }
+            .grid { grid-template-columns: 1fr; }
+            .search-form { flex-direction: column; }
+            .btn-search { width: 100%; }
         }
     </style>
 </head>
 <body>
-    <div class="sidebar">
-        <div class="brand">KEYGAP</div>
-        <div class="footer">
-            SYSTEM STATUS: ONLINE<br>
-            <span id="clock">00:00:00</span>
-        </div>
-    </div>
-    
-    <div class="mobile-nav">
-        <a href="https://www.amazon.it/gp/bestsellers/?tag=keygap-21" target="_blank" class="mobile-item">BestSellers</a>
-        <a href="https://www.amazon.it/gp/new-releases/?tag=keygap-21" target="_blank" class="mobile-item">New</a>
-        <a href="https://www.amazon.it/gp/goldbox?tag=keygap-21" target="_blank" class="mobile-item">Lampo</a>
+
+    <div class="node-status-bar">
+        <span class="pulse-dot"></span>
+        NODE STATUS: <span style="color: var(--neon-accent);">OPERATIONAL</span> 
+        | <span id="sync-time">SYNCING DATA...</span>
     </div>
 
-    <div class="main">
-        <div class="panel">
-            <h2>Market Scanner</h2>
-            <form action="https://www.amazon.it/s" method="GET" class="search-form" target="_blank">
-                <input type="text" name="k" placeholder="Cerca prodotto..." required autocomplete="off">
-                <input type="hidden" name="tag" value="keygap-21">
-                <button type="submit">Cerca</button>
-            </form>
+    <div class="app-container">
+        <div class="sidebar">
+            <div class="logo">K-SOVEREIGN</div>
+            <p style="color: var(--text-secondary); font-size: 0.85rem; line-height: 1.6;">
+                Interfaccia di Intelligence per il monitoraggio dei mercati digitali. Dati estratti in tempo reale dal server Linux Lite.
+            </p>
         </div>
 
-        <div class="grid">
-            <a href="https://www.amazon.it/s?k=informatica&tag=keygap-21" target="_blank" class="card">
-                <h3>Hardware</h3>
-                <p>Componenti PC, monitor e periferiche di ultima generazione.</p>
-            </a>
-            <a href="https://www.amazon.it/s?k=gaming&tag=keygap-21" target="_blank" class="card">
-                <h3>Gaming</h3>
-                <p>Console, sedie gaming e accessori per pro-player.</p>
-            </a>
-            <a href="https://www.amazon.it/s?k=domotica&tag=keygap-21" target="_blank" class="card">
-                <h3>Smart Home</h3>
-                <p>Automazione domestica, sicurezza e assistenti vocali.</p>
-            </a>
-            <a href="https://www.amazon.it/s?k=offerte&tag=keygap-21&low-price=&high-price=20" target="_blank" class="card">
-                <h3>Budget Zone</h3>
-                <p>I migliori affari selezionati sotto la soglia dei 20€.</p>
-            </a>
+        <div class="main">
+            <div class="search-form">
+                <input type="text" id="searchInput" placeholder="Inserisci prodotto o categoria da intercettare...">
+                <button type="button" class="btn-search" onclick="executeSearch()">AVVIA SCANSIONE</button>
+            </div>
+
+            <div class="priority-panel">
+                <h3 style="color: var(--neon-accent); font-family: 'Orbitron', sans-serif; margin: 0 0 10px 0;">⚠️ ALERT: ANOMALIA PREZZO</h3>
+                <p style="color: #fff; margin-bottom: 20px;">Rilevato crollo verticale su componentistica Hardware e Gaming di fascia alta.</p>
+                <a href="/filter?f=hardware" class="filter-link" style="background: var(--neon-accent); color: #000; padding: 12px 25px; border-radius: 6px;">Vedi Dati Intercettati</a>
+            </div>
+
+            <div class="grid">
+                <div class="panel">
+                    <h3 style="margin-top:0">GAMING RADAR</h3>
+                    <p style="color: var(--text-secondary); font-size: 0.9rem;">Monitoraggio console e accessori pronti per la cattura.</p>
+                    <a href="/filter?f=gaming" class="filter-link">Accedi ai Dati</a>
+                </div>
+                <div class="panel">
+                    <h3 style="margin-top:0">SMART HOME</h3>
+                    <p style="color: var(--text-secondary); font-size: 0.9rem;">Intercettazione domotica e sicurezza intelligente.</p>
+                    <a href="/filter?f=smarthome" class="filter-link">Accedi ai Dati</a>
+                </div>
+                <div class="panel">
+                    <h3 style="margin-top:0">LOW-20 ZONE</h3>
+                    <p style="color: var(--text-secondary); font-size: 0.9rem;">Tech puro selezionato sotto la soglia dei 20€.</p>
+                    <a href="/filter?f=low20" class="filter-link">Accedi ai Dati</a>
+                </div>
+            </div>
         </div>
     </div>
 
     <script>
-        function updateClock() {
-            const now = new Date();
-            document.getElementById('clock').innerText = now.toLocaleTimeString();
+        // Aggiorna l'orario di sincronizzazione
+        document.getElementById('sync-time').innerText = "LAST SYNC: " + new Date().toLocaleTimeString();
+
+        function executeSearch() {
+            const q = document.getElementById('searchInput').value;
+            if(!q) return;
+            
+            const btn = document.querySelector('.btn-search');
+            const originalText = btn.innerText;
+            btn.innerText = "SCANSIONE...";
+            
+            fetch(`/search?q=${encodeURIComponent(q)}`)
+            .then(res => res.json())
+            .then(data => { window.location.href = data.url; })
+            .catch(err => {
+                window.location.href = `https://www.amazon.it/s?k=${encodeURIComponent(q)}&tag=keygap-21`;
+            })
+            .finally(() => { btn.innerText = originalText; });
         }
-        setInterval(updateClock, 1000); updateClock();
+
+        document.addEventListener('click', function(e) {
+            const link = e.target.closest('.filter-link');
+            if (link) {
+                e.preventDefault();
+                link.style.opacity = "0.5";
+                const filterPath = link.getAttribute('href');
+                
+                fetch(filterPath)
+                .then(res => res.json())
+                .then(data => { window.location.href = data.url; })
+                .catch(err => {
+                    window.location.href = "https://www.amazon.it/?tag=keygap-21";
+                });
+            }
+        });
+
+        document.getElementById('searchInput').addEventListener('keypress', function (e) {
+            if (e.key === 'Enter') { executeSearch(); }
+        });
     </script>
 </body>
 </html>
