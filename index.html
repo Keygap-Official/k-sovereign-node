@@ -9,23 +9,36 @@
         :root { --neon: #00ff95; --bg: #1a1d23; --panel: #2d323c; --sub: #252932; }
         * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
         body { margin: 0; background: var(--bg); color: #fff; font-family: 'Inter', sans-serif; min-height: 100vh; overflow-x: hidden; }
+        
+        /* STATUS BAR */
         .status-bar { background: rgba(0, 255, 149, 0.1); border-bottom: 1px solid var(--neon); padding: 12px; text-align: center; font-family: 'Orbitron'; font-size: 0.7rem; position: sticky; top: 0; z-index: 100; backdrop-filter: blur(5px); }
         .pulse { display: inline-block; width: 8px; height: 8px; background: var(--neon); border-radius: 50%; margin-right: 8px; box-shadow: 0 0 10px var(--neon); animation: p 1.5s infinite; }
         @keyframes p { 0% { transform: scale(1); opacity: 1; } 50% { transform: scale(1.5); opacity: 0.5; } 100% { transform: scale(1); opacity: 1; } }
+
+        /* HEADER */
         .header { background: var(--sub); padding: 20px; text-align: center; border-bottom: 1px solid rgba(255,255,255,0.05); }
         .logo { font-family: 'Orbitron'; color: var(--neon); font-size: 1.4rem; letter-spacing: 2px; }
+
         .main { padding: 15px; max-width: 800px; margin: 0 auto; }
+
+        /* SEARCH */
         .search-form { display: flex; gap: 10px; margin-bottom: 20px; }
         input { flex: 1; background: var(--sub); border: 1px solid rgba(255,255,255,0.1); padding: 15px; border-radius: 8px; color: #fff; outline: none; font-size: 16px; }
         .btn-scan { background: var(--neon); border: none; padding: 15px 25px; border-radius: 8px; font-weight: bold; cursor: pointer; color: #000; font-family: 'Orbitron'; font-size: 0.8rem; }
-        .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 15px; }
+
+        /* GRID */
+        .section-title { font-family: 'Orbitron'; font-size: 0.8rem; color: var(--neon); margin: 25px 0 15px 5px; text-transform: uppercase; border-left: 3px solid var(--neon); padding-left: 10px; }
+        .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
         .panel { background: var(--panel); padding: 15px; border-radius: 10px; text-align: center; border: 1px solid rgba(255,255,255,0.05); }
-        .link { display: block; margin-top: 10px; background: var(--neon); color: #000; text-decoration: none; font-weight: bold; padding: 10px; border-radius: 6px; text-transform: uppercase; font-size: 0.7rem; }
+        .link { display: block; background: var(--neon); color: #000; text-decoration: none; font-weight: bold; padding: 10px; border-radius: 6px; text-transform: uppercase; font-size: 0.7rem; }
     </style>
 </head>
 <body>
 
-<div class="status-bar"><span class="pulse"></span>NODE STATUS: OPERATIONAL | <span id="time"></span></div>
+<div class="status-bar">
+    <span class="pulse"></span>NODE STATUS: OPERATIONAL | <span id="time"></span>
+</div>
+
 <div class="header"><div class="logo">K-SOVEREIGN</div></div>
 
 <div class="main">
@@ -34,41 +47,40 @@
         <button class="btn-scan" onclick="go('/node-search', true)">SCAN</button>
     </div>
 
+    <div class="section-title">Tech Radar</div>
     <div class="grid">
         <div class="panel"><h4>GAMING</h4><a href="/filter?f=gaming" class="link">Accedi</a></div>
         <div class="panel"><h4>SMARTPHONE</h4><a href="/filter?f=smartphone" class="link">Accedi</a></div>
-        <div class="panel"><h4>SMART HOME</h4><a href="/filter?f=smarthome" class="link">Accedi</a></div>
         <div class="panel"><h4>WAREHOUSE</h4><a href="/filter?f=warehouse" class="link">Accedi</a></div>
+        <div class="panel"><h4>SOTTO I 20€</h4><a href="/filter?f=low20" class="link">Accedi</a></div>
     </div>
 </div>
 
 <script>
     document.getElementById('time').innerText = new Date().toLocaleTimeString();
     
-    // --- RICORDATI DI AGGIORNARE QUESTO LINK OGNI VOLTA ---
-    const BOT_URL = "https://strong-rules-attend.loca.lt"; 
+    // --- LINK AGGIORNATO SERVEO ---
+    const BOT_URL = "https://d7574cc0855ebf66-83-225-28-216.serveousercontent.com"; 
 
     async function go(path, isPost) {
         const query = document.getElementById('q').value;
         const target = BOT_URL + path;
         
-        // Header per saltare la pagina di avviso di Localtunnel
-        const bypassHeaders = { "Bypass-Tunnel-Reminder": "true" };
-
         try {
             let res;
             if(isPost) {
                 res = await fetch(target, { 
                     method: 'POST', 
-                    headers: { ...bypassHeaders, 'Content-Type': 'application/x-www-form-urlencoded' },
+                    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
                     body: new URLSearchParams({q: query}) 
                 });
             } else {
-                res = await fetch(target, { headers: bypassHeaders });
+                res = await fetch(target);
             }
             const data = await res.json();
             if(data.url) window.location.href = data.url;
         } catch (e) {
+            // Fallback automatico su Amazon se il PC Linux è spento
             window.location.href = `https://www.amazon.it/s?k=${query || 'offerte'}&tag=keygap-21`;
         }
     }
