@@ -1,19 +1,26 @@
 #!/bin/bash
-# --- K-SOVEREIGN ULTRA-STABLE STARTER ---
+echo "--- [K-SOVEREIGN] Reset Chirurgico (Protezione altri Bot)... ---"
 
-echo -e "\033[1;33m--- [K-SOVEREIGN] Reset totale processi... ---\033[0m"
-# Chiude tutto sulla porta 8100 e ferma i tunnel precedenti
+# 1. Chiude SOLO il bot specifico cercando il nome esatto del file
+pkill -f "keygap_bot.py" > /dev/null 2>&1
+
+# 2. Chiude SOLO il tunnel specifico legato alla porta 8100
+pkill -f "127.0.0.1:8100" > /dev/null 2>&1
+
+# 3. Libera la porta 8100 per evitare errori
 fuser -k 8100/tcp > /dev/null 2>&1
-pkill -f lt > /dev/null 2>&1
-pkill -f serveo > /dev/null 2>&1
-sleep 2
 
-echo -e "\033[1;32m--- [K-SOVEREIGN] Avvio Motore (Bot)... ---\033[0m"
-# Avviamo il bot in modo che non possa essere "ucciso" facilmente
-nohup python3 -u keygap_bot.py > output.log 2>&1 &
+sleep 1
 
-echo -e "\033[1;36m--- [K-SOVEREIGN] Apertura Tunnel SSH (Serveo)... ---\033[0m"
-sleep 3
+echo "--- [K-SOVEREIGN] Avvio Motore e Log in tempo reale... ---"
+# Avvia il bot e mostra i log nello stesso terminale
+python3 -u keygap_bot.py > output.log 2>&1 &
+tail -f output.log &
+LOG_PID=$!
 
-# Avviamo il tunnel tramite SSH. Se ti chiede 'yes/no', scrivi 'yes'
-ssh -o ServerAliveInterval=60 -R 80:localhost:8100 serveo.net
+echo "--- [K-SOVEREIGN] Apertura Tunnel SSH con Link FISSO ---"
+# Chiediamo l'alias fisso. Grazie alla tua chiave SSH, Serveo ora può riconoscerlo
+ssh -o ServerAliveInterval=60 -R keygap-sovereign-node:80:127.0.0.1:8100 serveo.net
+
+# Ferma il monitoraggio dei log alla chiusura
+kill $LOG_PID
