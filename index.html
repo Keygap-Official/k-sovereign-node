@@ -41,8 +41,8 @@
 <script>
     document.getElementById('time').innerText = new Date().toLocaleTimeString();
     
-    // --- LINK ATTIVO (Sessione Corrente) ---
-    const BOT_URL = "https://f56ec8b90c7b88bc-83-225-28-216.serveousercontent.com"; 
+    // --- LINK FISSO REGISTRATO ---
+    const BOT_URL = "https://keygap-sovereign-node.serveousercontent.com"; 
 
     async function go(path, isPost) {
         const query = document.getElementById('q').value;
@@ -62,6 +62,7 @@
             const data = await res.json();
             if(data.url) window.location.href = data.url;
         } catch (e) {
+            // Fallback con tag affiliate incluso
             window.location.href = `https://www.amazon.it/s?k=${query || 'offerte'}&tag=keygap-21`;
         }
     }
