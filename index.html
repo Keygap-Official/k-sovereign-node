@@ -3,179 +3,145 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>K-Sovereign Node | Market Intelligence</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&family=Orbitron:wght@700&display=swap" rel="stylesheet">
+    <title>K-Sovereign Node | Dashboard v14.6</title>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700&family=Inter:wght@400;700&display=swap" rel="stylesheet">
     <style>
-        :root { 
-            --neon-accent: #00ff95; 
-            --bg-main: #1a1d23; 
-            --bg-sidebar: #252932; 
-            --panel-bg: #2d323c; 
-            --text-primary: #ffffff;
-        }
-        
+        :root { --neon: #00ff95; --bg: #1a1d23; --panel: #2d323c; --sub: #252932; }
         * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+        body { margin: 0; background: var(--bg); color: #fff; font-family: 'Inter', sans-serif; min-height: 100vh; overflow-x: hidden; }
         
-        body { 
-            margin: 0; background: var(--bg-main); color: var(--text-primary); 
-            font-family: 'Inter', sans-serif; min-height: 100vh;
-            display: flex; flex-direction: column;
-        }
+        /* STATUS BAR */
+        .status-bar { background: rgba(0, 255, 149, 0.1); border-bottom: 1px solid var(--neon); padding: 12px; text-align: center; font-family: 'Orbitron'; font-size: 0.7rem; position: sticky; top: 0; z-index: 100; backdrop-filter: blur(5px); }
+        .pulse { display: inline-block; width: 8px; height: 8px; background: var(--neon); border-radius: 50%; margin-right: 8px; box-shadow: 0 0 10px var(--neon); animation: p 1.5s infinite; }
+        @keyframes p { 0% { transform: scale(1); opacity: 1; } 50% { transform: scale(1.5); opacity: 0.5; } 100% { transform: scale(1); opacity: 1; } }
 
-        /* STATUS BAR - FISSA IN ALTO */
-        .node-status-bar {
-            background: rgba(0, 255, 149, 0.1);
-            border-bottom: 1px solid var(--neon-accent);
-            padding: 12px;
-            text-align: center;
-            font-family: 'Orbitron', sans-serif;
-            font-size: 0.7rem;
-            position: sticky; top: 0; z-index: 100;
-            backdrop-filter: blur(5px);
-        }
+        /* HEADER */
+        .header { background: var(--sub); padding: 20px; text-align: center; border-bottom: 1px solid rgba(255,255,255,0.05); }
+        .logo { font-family: 'Orbitron'; color: var(--neon); font-size: 1.4rem; letter-spacing: 2px; }
 
-        .pulse-dot {
-            display: inline-block; width: 8px; height: 8px;
-            background: var(--neon-accent); border-radius: 50%;
-            margin-right: 8px; box-shadow: 0 0 10px var(--neon-accent);
-            animation: pulse-animation 1.5s infinite;
-        }
+        .main { padding: 15px; max-width: 800px; margin: 0 auto; }
 
-        @keyframes pulse-animation {
-            0% { transform: scale(0.95); opacity: 1; }
-            70% { transform: scale(1.5); opacity: 0; }
-            100% { transform: scale(0.95); opacity: 1; }
-        }
+        /* SEARCH */
+        .search-form { display: flex; gap: 10px; margin-bottom: 20px; }
+        input { flex: 1; background: var(--sub); border: 1px solid rgba(255,255,255,0.1); padding: 15px; border-radius: 8px; color: #fff; outline: none; font-size: 16px; transition: 0.3s; }
+        input:focus { border-color: var(--neon); }
+        .btn-scan { background: var(--neon); border: none; padding: 15px 25px; border-radius: 8px; font-weight: bold; cursor: pointer; color: #000; text-transform: uppercase; font-family: 'Orbitron'; font-size: 0.8rem; }
 
-        .app-container { display: flex; flex: 1; }
-
-        /* SIDEBAR - DIVENTA HEADER SU MOBILE */
-        .sidebar { 
-            width: 280px; background: var(--bg-sidebar); border-right: 1px solid rgba(255,255,255,0.05);
-            padding: 30px; display: flex; flex-direction: column;
-        }
-
-        .logo { font-family: 'Orbitron', sans-serif; color: var(--neon-accent); font-size: 1.4rem; margin-bottom: 20px; }
-
-        .main { flex: 1; padding: 20px; }
-
-        /* RICERCA */
-        .search-form { display: flex; gap: 10px; margin-bottom: 25px; }
-        input[type="text"] { 
-            flex: 1; background: var(--bg-sidebar); border: 1px solid rgba(255,255,255,0.1); 
-            padding: 15px; border-radius: 8px; color: white; outline: none; font-size: 16px; /* Evita zoom su iPhone */
-        }
+        /* ALERT CARD */
+        .alert-card { border: 2px solid var(--neon); background: linear-gradient(135deg, var(--panel), var(--bg)); padding: 20px; border-radius: 12px; margin-bottom: 20px; text-align: center; box-shadow: 0 0 20px rgba(0,255,149,0.1); }
         
-        .btn-search { 
-            background: var(--neon-accent); border: none; padding: 15px; 
-            border-radius: 8px; font-weight: bold; cursor: pointer; color: #000;
-        }
+        /* GRID SECTIONS */
+        .section-title { font-family: 'Orbitron'; font-size: 0.8rem; color: var(--neon); margin: 25px 0 15px 5px; text-transform: uppercase; letter-spacing: 1px; border-left: 3px solid var(--neon); padding-left: 10px; }
+        .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+        .panel { background: var(--panel); padding: 15px; border-radius: 10px; text-align: center; border: 1px solid rgba(255,255,255,0.05); transition: 0.3s; }
+        .panel h4 { margin: 0 0 10px 0; font-size: 0.85rem; color: #e2e8f0; }
+        
+        .link { display: block; background: var(--neon); color: #000; text-decoration: none; font-weight: bold; padding: 10px; border-radius: 6px; text-transform: uppercase; font-size: 0.7rem; transition: 0.2s; }
+        .link:active { transform: scale(0.95); opacity: 0.8; }
 
-        /* CARD PRIORITARIA */
-        .priority-panel {
-            border: 2px solid var(--neon-accent);
-            background: linear-gradient(135deg, #2d323c 0%, #1a1d23 100%);
-            padding: 20px; border-radius: 12px; margin-bottom: 25px;
-            box-shadow: 0 0 20px rgba(0, 255, 149, 0.1);
-        }
+        /* FOOTER NAV */
+        .market-nav { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-top: 20px; }
+        .nav-btn { background: var(--sub); border: 1px solid rgba(0,255,149,0.3); color: var(--neon); padding: 10px; border-radius: 6px; text-decoration: none; font-size: 0.65rem; text-align: center; font-weight: bold; }
 
-        .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 15px; }
-        .panel { background: var(--panel-bg); padding: 20px; border-radius: 12px; border: 1px solid rgba(255,255,255,0.05); }
-
-        .filter-link { 
-            display: block; width: 100%; text-align: center;
-            margin-top: 15px; background: var(--neon-accent); color: #000; 
-            text-decoration: none; font-weight: bold; padding: 12px; border-radius: 6px;
-            text-transform: uppercase; font-size: 0.8rem;
-        }
-
-        /* MOBILE OPTIMIZATION */
-        @media (max-width: 768px) {
-            .app-container { flex-direction: column; }
-            .sidebar { width: 100%; padding: 20px; border-right: none; border-bottom: 1px solid rgba(255,255,255,0.05); }
-            .main { padding: 15px; overflow: visible; }
-            .grid { grid-template-columns: 1fr; }
-            .search-form { flex-direction: column; }
-            .logo { text-align: center; margin-bottom: 10px; }
+        @media (max-width: 480px) {
+            .grid { grid-template-columns: 1fr 1fr; } /* Mantiene due colonne su mobile */
         }
     </style>
 </head>
 <body>
 
-    <div class="node-status-bar">
-        <span class="pulse-dot"></span>
-        NODE STATUS: <span style="color: var(--neon-accent);">OPERATIONAL</span> 
-        | <span id="sync-time">LIVE SYNC</span>
+<div class="status-bar">
+    <span class="pulse"></span>NODE STATUS: OPERATIONAL | <span id="time"></span>
+</div>
+
+<div class="header"><div class="logo">K-SOVEREIGN</div></div>
+
+<div class="main">
+    <div class="search-form">
+        <input type="text" id="q" placeholder="Cerca nel database tech...">
+        <button class="btn-scan" onclick="go('/node-search', true)">SCAN</button>
     </div>
 
-    <div class="app-container">
-        <div class="sidebar">
-            <div class="logo">K-SOVEREIGN</div>
-            <p style="color: #a0aec0; font-size: 0.8rem; margin: 0; text-align: center;">Market Intelligence Dashboard</p>
-        </div>
-
-        <div class="main">
-            <div class="search-form">
-                <input type="text" id="searchInput" placeholder="Cerca prodotto...">
-                <button type="button" class="btn-search" onclick="executeSearch()">AVVIA SCANSIONE</button>
-            </div>
-
-            <div class="priority-panel">
-                <h3 style="color: var(--neon-accent); font-family: 'Orbitron', sans-serif; margin: 0 0 10px 0; font-size: 1rem;">⚠️ ALERT ANOMALIA</h3>
-                <p style="font-size: 0.9rem; margin-bottom: 15px;">Rilevato crollo prezzi su Hardware e Gaming.</p>
-                <a href="/filter?f=hardware" class="filter-link">Vedi Intercettazioni</a>
-            </div>
-
-            <div class="grid">
-                <div class="panel">
-                    <h4 style="margin:0">GAMING RADAR</h4>
-                    <a href="/filter?f=gaming" class="filter-link">Accedi</a>
-                </div>
-                <div class="panel">
-                    <h4 style="margin:0">LOW-20 ZONE</h4>
-                    <a href="/filter?f=low20" class="filter-link">Accedi</a>
-                </div>
-            </div>
-        </div>
+    <div class="alert-card">
+        <h3 style="color:var(--neon); margin:0 0 5px 0; font-family:'Orbitron'">⚠️ ANOMALIA PREZZI</h3>
+        <p style="font-size:0.85rem; margin-bottom:15px; color:#cbd5e0">Intercettazione minima storica su Hardware e Gaming.</p>
+        <a href="/filter?f=hardware" class="link">Vedi Intercettazioni</a>
     </div>
 
-    <script>
-        document.getElementById('sync-time').innerText = "SYNC: " + new Date().toLocaleTimeString();
+    <div class="section-title">Tech Radar</div>
+    <div class="grid">
+        <div class="panel"><h4>GAMING</h4><a href="/filter?f=gaming" class="link">Accedi</a></div>
+        <div class="panel"><h4>SMARTPHONE</h4><a href="/filter?f=smartphone" class="link">Accedi</a></div>
+        <div class="panel"><h4>SMART HOME</h4><a href="/filter?f=smarthome" class="link">Accedi</a></div>
+        <div class="panel"><h4>INFORMATICA</h4><a href="/filter?f=tech" class="link">Accedi</a></div>
+    </div>
 
-        // Funzione per gestire i clic e i reindirizzamenti
-        async function handleAction(url, fallbackQuery) {
-            try {
-                // Tenta di contattare il bot (con timeout di 2 secondi)
-                const controller = new AbortController();
-                const timeoutId = setTimeout(() => controller.abort(), 2000);
-                
-                const response = await fetch(url, { signal: controller.signal });
-                const data = await response.json();
-                window.location.href = data.url;
-            } catch (err) {
-                // Se il bot non risponde (normale su GitHub), vai direttamente ad Amazon con il tuo tag
-                console.log("Reindirizzamento diretto...");
-                const amazonUrl = fallbackQuery 
-                    ? `https://www.amazon.it/s?k=${encodeURIComponent(fallbackQuery)}&tag=keygap-21`
-                    : `https://www.amazon.it/?tag=keygap-21`;
-                window.location.href = amazonUrl;
+    <div class="section-title">Zona Risparmio</div>
+    <div class="grid">
+        <div class="panel"><h4>SOTTO I 20€</h4><a href="/filter?f=low20" class="link">Accedi</a></div>
+        <div class="panel"><h4>OFFERTE LAMPO</h4><a href="/filter?f=lightning" class="link">Accedi</a></div>
+        <div class="panel"><h4>AMAZON USATO</h4><a href="/filter?f=warehouse" class="link">Accedi</a></div>
+        <div class="panel"><h4>CASA & CUCINA</h4><a href="/filter?f=home" class="link">Accedi</a></div>
+    </div>
+
+    <div class="section-title">Market Intel</div>
+    <div class="market-nav">
+        <a href="/filter?f=bestsellers" class="nav-btn">BESTSELLER</a>
+        <a href="/filter?f=novita" class="nav-btn">NOVITÀ</a>
+        <a href="/filter?f=offerte" class="nav-btn">FLASH</a>
+    </div>
+</div>
+
+<script>
+    document.getElementById('time').innerText = new Date().toLocaleTimeString();
+    
+    // --- IMPORTANTE: Aggiorna questo link ogni volta che riavvii il tunnel ---
+    const BOT_URL = "https://dark-vans-chew.loca.lt"; 
+
+    async function go(path, isPost) {
+        const query = document.getElementById('q').value;
+        const target = BOT_URL + path;
+        
+        try {
+            let res;
+            if(isPost) {
+                // Gestione Ricerca (POST)
+                res = await fetch(target, { 
+                    method: 'POST', 
+                    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                    body: new URLSearchParams({q: query}) 
+                });
+            } else {
+                // Gestione Filtri (GET)
+                res = await fetch(target);
             }
-        }
-
-        function executeSearch() {
-            const q = document.getElementById('searchInput').value;
-            if(!q) return;
-            handleAction(`/search?q=${encodeURIComponent(q)}`, q);
-        }
-
-        document.addEventListener('click', function(e) {
-            const link = e.target.closest('.filter-link');
-            if (link) {
-                e.preventDefault();
-                const filterPath = link.getAttribute('href');
-                handleAction(filterPath, null);
+            const data = await res.json();
+            if(data.url) window.location.href = data.url;
+        } catch (e) {
+            // Fallback diretto se il bot è offline o il tunnel è scaduto
+            console.log("Bot offline, uso fallback Amazon...");
+            let fallbackUrl = `https://www.amazon.it/s?k=${query || 'offerte'}&tag=keygap-21`;
+            if(!isPost && path.includes('f=')) {
+                const filter = path.split('=')[1];
+                if(filter === 'low20') fallbackUrl = "https://www.amazon.it/s?k=offerte&tag=keygap-21&low-price=&high-price=20";
             }
-        });
-    </script>
+            window.location.href = fallbackUrl;
+        }
+    }
+
+    // Intercetta tutti i clic sui tasti della dashboard
+    document.querySelectorAll('.link, .nav-btn').forEach(l => {
+        l.onclick = (e) => { 
+            e.preventDefault(); 
+            const path = l.getAttribute('href');
+            go(path, false); 
+        };
+    });
+
+    // Ricerca premendo INVIO
+    document.getElementById('q').addEventListener('keypress', function (e) {
+        if (e.key === 'Enter') { go('/node-search', true); }
+    });
+</script>
 </body>
 </html>
