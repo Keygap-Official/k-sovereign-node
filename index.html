@@ -53,7 +53,7 @@
                 res = await fetch(target, { 
                     method: 'POST', 
                     headers: { ...headers, 'Content-Type': 'application/x-www-form-urlencoded' },
-                    body: newSearchParams({q: query}) 
+                    body: new URLSearchParams({q: query}) 
                 });
             } else {
                 res = await fetch(target, { headers });
