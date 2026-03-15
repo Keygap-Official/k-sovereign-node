@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://giampierodeluca676-lgtm.github.io/k-sovereign-node/sitemap.xml
