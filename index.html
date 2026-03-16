@@ -19,7 +19,6 @@
         .logo { font-family: 'Orbitron'; color: var(--neon); font-size: 1.4rem; letter-spacing: 2px; }
         .main { padding: 15px; max-width: 800px; margin: 0 auto; flex: 1; }
         
-        /* Modifica strutturale per i due bottoni di fuoco */
         .search-form { display: flex; gap: 8px; margin-bottom: 20px; flex-wrap: wrap; }
         input { flex: 1 1 100%; background: var(--sub); border: 1px solid rgba(255,255,255,0.1); padding: 15px; border-radius: 8px; color: #fff; outline: none; font-size: 16px; margin-bottom: 5px; }
         .btn-amz { background: #ff9900; color: #000; border: none; padding: 15px; border-radius: 8px; font-weight: bold; cursor: pointer; font-family: 'Orbitron'; font-size: 0.8rem; flex: 1; transition: opacity 0.3s; }
@@ -27,8 +26,14 @@
         .btn-amz:hover, .btn-ebay:hover { opacity: 0.8; }
         
         .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
-        .panel { background: var(--panel); padding: 15px; border-radius: 10px; text-align: center; border: 1px solid rgba(255,255,255,0.05); }
-        .link { display: block; background: var(--neon); color: #000; text-decoration: none; font-weight: bold; padding: 10px; border-radius: 6px; text-transform: uppercase; font-size: 0.7rem; }
+        .panel { background: var(--panel); padding: 15px; border-radius: 10px; text-align: center; border: 1px solid rgba(255,255,255,0.05); display: flex; flex-direction: column; justify-content: space-between;}
+        .panel h4 { margin-top: 0; margin-bottom: 15px; font-size: 0.9rem; }
+        
+        /* Nuovi bottoni sdoppiati per i pannelli rapidi */
+        .panel-actions { display: flex; gap: 5px; width: 100%; }
+        .btn-mini-amz { flex: 1; background: #ff9900; color: #000; border: none; padding: 10px 5px; border-radius: 6px; font-weight: bold; cursor: pointer; font-family: 'Orbitron'; font-size: 0.65rem; transition: opacity 0.3s; }
+        .btn-mini-ebay { flex: 1; background: #0064d2; color: #fff; border: none; padding: 10px 5px; border-radius: 6px; font-weight: bold; cursor: pointer; font-family: 'Orbitron'; font-size: 0.65rem; transition: opacity 0.3s; }
+        .btn-mini-amz:hover, .btn-mini-ebay:hover { opacity: 0.8; }
         
         .telegram-node { background: var(--panel); border: 1px solid var(--neon); border-radius: 10px; padding: 20px; text-align: center; margin-top: 25px; box-shadow: 0 0 15px rgba(0, 255, 149, 0.05); }
         .tg-title { font-family: 'Orbitron'; color: var(--neon); font-size: 1rem; margin-top: 0; letter-spacing: 1px; }
@@ -49,11 +54,36 @@
         <button class="btn-amz" onclick="go('/node-search', true, 'amazon')">AMAZON</button>
         <button class="btn-ebay" onclick="go('/node-search', true, 'ebay')">EBAY</button>
     </div>
+    
     <div class="grid">
-        <div class="panel"><h4>GAMING</h4><a href="/filter?f=gaming" class="link">Accedi</a></div>
-        <div class="panel"><h4>SMARTPHONE</h4><a href="/filter?f=smartphone" class="link">Accedi</a></div>
-        <div class="panel"><h4>WAREHOUSE</h4><a href="/filter?f=warehouse" class="link">Accedi</a></div>
-        <div class="panel"><h4>SOTTO I 20€</h4><a href="/filter?f=low20" class="link">Accedi</a></div>
+        <div class="panel">
+            <h4>GAMING</h4>
+            <div class="panel-actions">
+                <button class="btn-mini-amz" onclick="go('/filter?f=gaming', false, 'amazon')">AMZ</button>
+                <button class="btn-mini-ebay" onclick="go('/filter?f=gaming', false, 'ebay')">EBAY</button>
+            </div>
+        </div>
+        <div class="panel">
+            <h4>SMARTPHONE</h4>
+            <div class="panel-actions">
+                <button class="btn-mini-amz" onclick="go('/filter?f=smartphone', false, 'amazon')">AMZ</button>
+                <button class="btn-mini-ebay" onclick="go('/filter?f=smartphone', false, 'ebay')">EBAY</button>
+            </div>
+        </div>
+        <div class="panel">
+            <h4>WAREHOUSE</h4>
+            <div class="panel-actions">
+                <button class="btn-mini-amz" onclick="go('/filter?f=warehouse', false, 'amazon')">AMZ</button>
+                <button class="btn-mini-ebay" onclick="go('/filter?f=warehouse', false, 'ebay')">EBAY</button>
+            </div>
+        </div>
+        <div class="panel">
+            <h4>SOTTO I 20€</h4>
+            <div class="panel-actions">
+                <button class="btn-mini-amz" onclick="go('/filter?f=low20', false, 'amazon')">AMZ</button>
+                <button class="btn-mini-ebay" onclick="go('/filter?f=low20', false, 'ebay')">EBAY</button>
+            </div>
+        </div>
     </div>
 
     <div class="telegram-node">
@@ -72,7 +102,13 @@
 </footer>
 
 <script>
-    document.getElementById('time').innerText = new Date().toLocaleTimeString();
+    // --- AGGIORNAMENTO OROLOGIO FLUIDO ---
+    function updateClock() {
+        document.getElementById('time').innerText = new Date().toLocaleTimeString();
+    }
+    setInterval(updateClock, 1000);
+    updateClock();
+
     const BOT_URL = "https://keygap-sovereign-node.serveousercontent.com"; 
     
     // --- ARMAMENTO AFFILIATO ---
@@ -80,27 +116,30 @@
     // ⚠️ SOSTITUISCI CON IL TUO VERO ID CAMPAGNA EBAY (10 CIFRE)
     const CAMPAIGN_EBAY = "5339145312"; 
 
-    // Motore di scansione potenziato a doppia piattaforma
+    // Motore Javascript intelligente
     async function go(path, isPost, platform = 'amazon') {
-        const query = document.getElementById('q').value || 'offerte tech';
         
-        // Paracadute di emergenza (fallback se il tunnel cade)
-        const fallbackAmazon = `https://www.amazon.it/s?k=${encodeURIComponent(query)}&tag=${TARGET_AMAZON}`;
-        const fallbackEbay = `https://www.ebay.it/sch/i.html?_nkw=${encodeURIComponent(query)}&mkcid=1&mkrid=724-53478-19255-0&siteid=35&campid=${CAMPAIGN_EBAY}&customid=keygap_web_fallback&toolid=10001&mkevt=1`;
+        // Estraiamo il termine di ricerca o il nome della categoria per il paracadute di emergenza
+        let queryText = document.getElementById('q').value;
+        if (!isPost && path.includes('?f=')) {
+            queryText = path.split('?f=')[1]; 
+        }
+        if (!queryText) queryText = 'offerte tech';
+        
+        const fallbackAmazon = `https://www.amazon.it/s?k=${encodeURIComponent(queryText)}&tag=${TARGET_AMAZON}`;
+        const fallbackEbay = `https://www.ebay.it/sch/i.html?_nkw=${encodeURIComponent(queryText)}&mkcid=1&mkrid=724-53478-19255-0&siteid=35&campid=${CAMPAIGN_EBAY}&customid=keygap_web_fallback&toolid=10001&mkevt=1`;
 
         const target = BOT_URL + path;
         try {
             let res;
             const headers = { "Bypass-Tunnel-Reminder": "true" };
             if(isPost) {
-                // Passiamo al bot backend quale piattaforma ha scelto l'utente
                 res = await fetch(target, { 
                     method: 'POST', 
                     headers: { ...headers, 'Content-Type': 'application/x-www-form-urlencoded' },
-                    body: new URLSearchParams({q: query, store: platform}) 
+                    body: new URLSearchParams({q: document.getElementById('q').value, store: platform}) 
                 });
             } else {
-                // Per i filtri rapidi (es. Gaming), aggiungiamo il parametro store
                 const filterTarget = path.includes('?') ? `${target}&store=${platform}` : `${target}?store=${platform}`;
                 res = await fetch(filterTarget, { headers });
             }
@@ -112,23 +151,10 @@
                 throw new Error("Dati corrotti dal Nodo");
             }
         } catch (e) {
-            // Se il bot Python è spento o schiantato, l'utente non vede alcun errore. 
-            // Viene paracadutato sul tuo link affiliato e tu non perdi il click.
+            // Se il bot Python è spento, atterra in sicurezza sui link affiliati
             window.location.href = (platform === 'ebay') ? fallbackEbay : fallbackAmazon;
         }
     }
-
-    // Aggancio dei 4 pannelli rapidi (Default su Amazon, ma espandibile)
-    document.querySelectorAll('.link').forEach(l => {
-        l.onclick = (e) => { 
-            e.preventDefault(); 
-            go(l.getAttribute('href'), false, 'amazon'); 
-        };
-    });
 </script>
 </body>
 </html>
-
-
-
-

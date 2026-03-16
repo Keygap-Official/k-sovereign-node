@@ -1,3 +1,16 @@
-[09:21:36] 🔗 FILTRO   | Citta: Marina di Gioiosa Io | Info: warehouse
-[09:21:37] 🔗 FILTRO   | Citta: Marina di Gioiosa Io | Info: warehouse
-[09:21:50] 🔗 FILTRO   | Citta: Marina di Gioiosa Io | Info: smartphone
+
+[1;37m━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━[0m
+[1;37m┃ ORARIO     ┃ TASTO PREMUTO          ┃ CATEGORIA            ┃ OGGETTO SPECIFICO      ┃ STORE    ┃ ORIGINE (IP E ZONA)               ┃[0m
+[1;37m━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━[0m
+┃ [1;32m[09:41:33][0m ┃ [1;34m[PANNELLO] Gaming     [0m ┃ [1;37mSetup & Accessori   [0m ┃ [1;35mHardware Gaming       [0m ┃ [1;33mAMAZON  [0m ┃ [1;31m83.225.28.216 (Marina di Gioiosa [0m ┃
+┃ [1;32m[09:42:01][0m ┃ [1;34m[BTN SCAN] EBAY       [0m ┃ [1;37mRicerca Libera Testo[0m ┃ [1;35m"Tv"                  [0m ┃ [1;36mEBAY    [0m ┃ [1;31m83.225.28.216 (Marina di Gioiosa [0m ┃
+Traceback (most recent call last):
+  File "/home/linuxlite/Desktop/Keygap_Project/keygap_bot.py", line 176, in <module>
+    httpd.serve_forever()
+  File "/usr/lib/python3.12/socketserver.py", line 235, in serve_forever
+    ready = selector.select(poll_interval)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/selectors.py", line 415, in select
+    fd_event_list = self._selector.poll(timeout)
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+KeyboardInterrupt
